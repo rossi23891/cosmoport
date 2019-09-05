@@ -1,9 +1,7 @@
 package com.space.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -16,15 +14,37 @@ public class Ship {
 
     @Id
     @GeneratedValue
+    @NotNull
+    @Positive
     private Long id;
 
+    @NotNull
+    @Size(max = 50)
     private String name;
+
+    @NotNull
+    @Size(max = 50)
     private String planet;
+
+    @NotNull
     private ShipType shipType;
+
+    @NotNull
     private Date prodDate;
+
+    @NotNull
     private Boolean isUsed;
+
+    @NotNull
+    @DecimalMin(value = "0.01")@DecimalMax(value = "0.99")
     private Double speed;
+
+    @NotNull
+    @Min(value = 1)
+    @Max(value = 9999)
     private Integer crewSize;
+
+    @NotNull
     private Double rating;
 
     public Ship(Long id, String name, String planet, ShipType shipType, Date prodDate,
@@ -109,7 +129,7 @@ public class Ship {
     }
 
     public void setRating() {
-        this.rating = calculateRating();
+        this.rating = rating;
     }
 
     private Double calculateRating(){
