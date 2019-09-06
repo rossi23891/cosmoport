@@ -4,11 +4,12 @@ import com.space.validator.ProdDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.io.Serializable;
 import java.util.Date;
 
 
 @Entity
-@Table (name= "ships")
+@Table (name= "ship")
 
 public class Ship {
 
@@ -26,7 +27,7 @@ public class Ship {
     private String planet;
 
     @NotNull
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private ShipType shipType;
 
     @NotNull
