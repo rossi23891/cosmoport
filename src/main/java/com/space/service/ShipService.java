@@ -11,11 +11,12 @@ import java.util.List;
 
 public interface ShipService {
     List<Ship> getAllShips(Specification<Ship> shipSpecification);
-    Page<Ship> getAllShips(Specification<Ship> shipSpecification, Pageable pageable);// check
+    Page<Ship> getAllShips(Specification<Ship> shipSpecification, Pageable pageable);
     Ship addShip(Ship ship);
     Ship editShip(Ship ship);
     void deleteShip(Long id);
     Ship getShipById(Long id);
+    boolean ifIdExists(Long id);
 
     Specification<Ship> filterByName(String name);
     Specification<Ship> filterByPlanet(String planet);
@@ -26,7 +27,5 @@ public interface ShipService {
     Specification<Ship> filterBySpeed(Double min, Double max);
     Specification<Ship> filterByCrewSize(Integer min, Integer max);
     Specification<Ship> filterByRating(Double min, Double max);
-
-    long count(Specification<Ship>shipSpecification);
 
 }

@@ -1,10 +1,10 @@
 package com.space.model;
 
+import com.space.validator.ProdDate;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 
 @Entity
@@ -14,51 +14,38 @@ public class Ship {
 
     @Id
     @GeneratedValue
-    @NotNull
-    @Positive
+    @Positive(message = "ID should be number greater than 0")
     private Long id;
 
-    @NotNull
-    @Size(max = 50)
+    @NotEmpty(message = "Name should not be empty")
+    @Size(max = 50,message = "Name length should not be more than 50 symbols")
     private String name;
 
-    @NotNull
-    @Size(max = 50)
+    @NotEmpty(message = "Planet should not be empty")
+    @Size(max = 50,message = "Planet length should not be more than 50 symbols")
     private String planet;
 
     @NotNull
+    @Enumerated
     private ShipType shipType;
 
     @NotNull
+    @ProdDate
     private Date prodDate;
 
-    @NotNull
     private Boolean isUsed;
 
     @NotNull
-    @DecimalMin(value = "0.01")@DecimalMax(value = "0.99")
+    @DecimalMin(value = "0.01",message = "Speed should start from 0.01")
+    @DecimalMax(value = "0.99",message = "Speed should not be higher 0.99")
     private Double speed;
 
     @NotNull
-    @Min(value = 1)
-    @Max(value = 9999)
+    @Min(value = 1,message = "Crew size should be more than 0")
+    @Max(value = 9999,message = "Crew size should be more than 10000")
     private Integer crewSize;
 
-    @NotNull
     private Double rating;
-
-    public Ship(Long id, String name, String planet, ShipType shipType, Date prodDate,
-                Boolean isUsed, Double speed, Integer crewSize, Double rating) {
-        this.id = id;
-        this.name = name;
-        this.planet = planet;
-        this.shipType = shipType;
-        this.prodDate = prodDate;
-        this.isUsed = isUsed;
-        this.speed = speed;
-        this.crewSize = crewSize;
-        this.rating = rating;
-    }
 
     public Long getId() {
         return id;
@@ -128,17 +115,8 @@ public class Ship {
         return rating;
     }
 
-    public void setRating() {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 
-    private Double calculateRating(){
-        double k = isUsed ? 0.5 : 1.0;
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(getProdDate());
-        int year = calendar.get(Calendar.YEAR);
-        Double currentRating = ((80*getSpeed()*k)/(3019-year+1));
-        currentRating = Math.round(currentRating*100.0)/100.0;
-        return currentRating;
-    }
 }

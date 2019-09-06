@@ -10,10 +10,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 @Service
@@ -27,7 +26,6 @@ public class ShipServiceImpl implements ShipService {
         return shipRepository.findAll();
     }
 
-
     @Override
     public Page<Ship> getAllShips(Specification<Ship> shipSpecification, Pageable pageable) {
         return shipRepository.findAll(shipSpecification,pageable);
@@ -36,24 +34,33 @@ public class ShipServiceImpl implements ShipService {
     @Override
     public Ship addShip(Ship ship) {
 
-        Ship savedShip = shipRepository.saveAndFlush(ship);
-        return savedShip;
+        if(ship.getUsed()==null){
+            ship.setUsed(false);
+        }
+
+        Double rating = calculateRating(ship);
+        ship.setRating(rating);
+
+        return shipRepository.saveAndFlush(ship);
+    }
+
+    public boolean ifIdExists(Long id){
+        return shipRepository.existsById(id);
     }
 
     @Override
     public Ship editShip(Ship ship) {
+
         return shipRepository.saveAndFlush(ship);
     }
 
     @Override
     public void deleteShip(Long id) {
         shipRepository.deleteById(id);
-
     }
 
     @Override
     public Ship getShipById(Long id) {
-
         return shipRepository.getOne(id);
     }
 
@@ -87,12 +94,16 @@ public class ShipServiceImpl implements ShipService {
                 return null;
             }
             if(after==null){
-                return criteriaBuilder.lessThanOrEqualTo(root.get("prodDate"),before);
+                Date beforeDate = new Date(before);
+                return criteriaBuilder.lessThanOrEqualTo(root.get("prodDate"),beforeDate);
             }
             if(before==null){
-                return criteriaBuilder.greaterThanOrEqualTo(root.get("prodDate"),after);
+                Date afterDate = new Date(after);
+                return criteriaBuilder.greaterThanOrEqualTo(root.get("prodDate"),afterDate);
             }
-            return criteriaBuilder.between(root.get("prodDate"),after,before);
+            Date beforeDate = new Date(before);
+            Date afterDate = new Date(after);
+            return criteriaBuilder.between(root.get("prodDate"),afterDate,beforeDate);
         };
     }
 
@@ -160,8 +171,14 @@ public class ShipServiceImpl implements ShipService {
         };
     }
 
-    @Override
-    public long count(Specification<Ship>shipSpecification) {
-        return shipRepository.count(shipSpecification);
+
+    private Double calculateRating(Ship ship){
+        double k = ship.getUsed() ? 0.5 : 1.0;
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(ship.getProdDate());
+        int year = calendar.get(Calendar.YEAR);
+        Double currentRating = ((80*ship.getSpeed()*k)/(3019-year+1));
+        currentRating = Math.round(currentRating*100.0)/100.0;
+        return currentRating;
     }
 }

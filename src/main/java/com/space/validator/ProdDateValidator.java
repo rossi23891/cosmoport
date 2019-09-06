@@ -15,6 +15,6 @@ public class ProdDateValidator implements ConstraintValidator<ProdDate, Date> {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(date);
         int year = calendar.get(Calendar.YEAR);
-        return year>=min&& year<=max;
+        return year>=min && year<=max && date.getTime()>=0;
     }
 }
