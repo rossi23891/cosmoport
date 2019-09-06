@@ -60,42 +60,104 @@ public class ShipServiceImpl implements ShipService {
     @Override
     public Specification<Ship> filterByName(String name) {
 
-        return (Specification<Ship>) (root, query, criteriaBuilder) -> name ==null?null : criteriaBuilder.like(root.get("name"),"%" + name + "%");
+        return (Specification<Ship>) (root, query, criteriaBuilder) ->
+                name ==null?null : criteriaBuilder.like(root.get("name"),"%" + name + "%");
     }
 
     @Override
     public Specification<Ship> filterByPlanet(String planet) {
-        return null;
+
+        return (Specification<Ship>) (root, query, criteriaBuilder) ->
+                planet ==null?null : criteriaBuilder.like(root.get("planet"),"%" + planet + "%");
     }
 
     @Override
     public Specification<Ship> filterByShipType(ShipType shipType) {
-        return null;
+
+        return (Specification<Ship>) (root, query, criteriaBuilder) ->
+                shipType ==null?null : criteriaBuilder.like(root.get("shiptype"),"%" + shipType + "%");
     }
 
     @Override
     public Specification<Ship> filterByDate(Long after, Long before) {
-        return null;
+
+        return (Specification<Ship>) (root, query, criteriaBuilder) ->
+        {
+            if(after==null&&before==null){
+                return null;
+            }
+            if(after==null){
+                return criteriaBuilder.lessThanOrEqualTo(root.get("prodDate"),before);
+            }
+            if(before==null){
+                return criteriaBuilder.greaterThanOrEqualTo(root.get("prodDate"),after);
+            }
+            return criteriaBuilder.between(root.get("prodDate"),after,before);
+        };
     }
 
     @Override
     public Specification<Ship> filterByUsage(Boolean isUsed) {
-        return null;
+
+        return (Specification<Ship>) (root, query, criteriaBuilder) ->{
+            if(isUsed==null){
+                return null;
+            }
+            if(isUsed){
+                return criteriaBuilder.isTrue(root.get("isUsed"));
+            }
+            return criteriaBuilder.isFalse(root.get("isUsed"));
+        };
     }
 
     @Override
     public Specification<Ship> filterBySpeed(Double min, Double max) {
-        return null;
+
+        return (Specification<Ship>) (root, query, criteriaBuilder) ->{
+            if (min == null && max == null){
+                return null;
+            }
+            if (min == null){
+                return criteriaBuilder.lessThanOrEqualTo(root.get("speed"), max);
+            }
+            if (max == null){
+                return criteriaBuilder.greaterThanOrEqualTo(root.get("speed"), min);
+            }
+            return criteriaBuilder.between(root.get("speed"), min, max);
+        };
     }
 
     @Override
     public Specification<Ship> filterByCrewSize(Integer min, Integer max) {
-        return null;
+
+        return (Specification<Ship>) (root, query, criteriaBuilder) ->{
+            if (min == null && max == null){
+                return null;
+            }
+            if (min == null){
+                return criteriaBuilder.lessThanOrEqualTo(root.get("crewSize"), max);
+            }
+            if (max == null){
+                return criteriaBuilder.greaterThanOrEqualTo(root.get("crewSize"), min);
+            }
+            return criteriaBuilder.between(root.get("crewSize"), min, max);
+        };
     }
 
     @Override
     public Specification<Ship> filterByRating(Double min, Double max) {
-        return null;
+        return (Specification<Ship>) (root, query, criteriaBuilder) ->{
+            if (min == null && max == null){
+                return null;
+            }
+            if (min == null){
+                return criteriaBuilder.lessThanOrEqualTo(root.get("rating"), max);
+            }
+            if (max == null){
+                return criteriaBuilder.greaterThanOrEqualTo(root.get("rating"), min);
+            }
+            return criteriaBuilder.between(root.get("rating"), min, max);
+        };
     }
 
     @Override
