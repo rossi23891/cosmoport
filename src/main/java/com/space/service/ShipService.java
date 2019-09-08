@@ -13,7 +13,7 @@ public interface ShipService {
     List<Ship> getAllShips(Specification<Ship> shipSpecification);
     Page<Ship> getAllShips(Specification<Ship> shipSpecification, Pageable pageable);
     Ship addShip(Ship ship);
-    Ship editShip(Ship ship);
+    Ship editShip(Long id,Ship ship);
     void deleteShip(Long id);
     Ship getShipById(Long id);
     boolean ifIdExists(Long id);

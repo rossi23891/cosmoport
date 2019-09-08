@@ -120,5 +120,19 @@ public class ShipController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
         }
     }
+    @PostMapping(value = "/ships/{id}")
+    public Ship updateShipById(@PathVariable("id")@Valid Long id,@RequestBody Ship ship){
+        Ship updatedShip;
+        if(!shipService.ifIdExists(id)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Not possible to update data. ID " + id
+                    + " doesn't exist");
+        }
+        try{
+            updatedShip=shipService.editShip(id,ship);
+        } catch (ConstraintViolationException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
+        }
+        return updatedShip;
+    }
 
 }

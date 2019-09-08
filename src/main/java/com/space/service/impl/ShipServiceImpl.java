@@ -49,9 +49,34 @@ public class ShipServiceImpl implements ShipService {
     }
 
     @Override
-    public Ship editShip(Ship ship) {
+    public Ship editShip(Long id,Ship ship) {
+        Ship tobeUpdated = shipRepository.getOne(id);
+        if(ship.getName()!=null){
+            tobeUpdated.setName(ship.getName());
+        }
+        if(ship.getPlanet()!=null){
+            tobeUpdated.setPlanet(ship.getPlanet());
+        }
+        if(ship.getShipType()!=null){
+            tobeUpdated.setShipType(ship.getShipType());
+        }
 
-        return shipRepository.saveAndFlush(ship);
+        if(ship.getProdDate()!=null){
+            tobeUpdated.setProdDate(ship.getProdDate());
+        }
+        if(ship.getUsed()!=null){
+            tobeUpdated.setUsed(ship.getUsed());
+        }
+        if(ship.getSpeed()!=null){
+            tobeUpdated.setSpeed(ship.getSpeed());
+        }
+        if(ship.getCrewSize()!=null){
+            tobeUpdated.setCrewSize(ship.getCrewSize());
+        }
+
+        Double newRating = calculateRating(tobeUpdated);
+        tobeUpdated.setRating(newRating);
+        return shipRepository.saveAndFlush(tobeUpdated);
     }
 
     @Override
