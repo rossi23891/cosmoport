@@ -4,9 +4,7 @@ import com.space.validator.ProdDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
-import java.io.Serializable;
 import java.util.Date;
-
 
 @Entity
 @Table (name= "ship")
@@ -14,7 +12,7 @@ import java.util.Date;
 public class Ship {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Positive(message = "ID should be number greater than 0")
     private Long id;
 
