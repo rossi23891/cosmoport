@@ -8,7 +8,6 @@ import java.util.Date;
 
 @Entity
 @Table (name= "ship")
-
 public class Ship {
 
     @Id
@@ -28,8 +27,8 @@ public class Ship {
     @Enumerated(EnumType.STRING)
     private ShipType shipType;
 
-    @NotNull
     @ProdDate
+    @NotNull
     private Date prodDate;
 
     private Boolean isUsed;

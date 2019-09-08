@@ -9,12 +9,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 @RestController
@@ -84,52 +85,65 @@ public class ShipController {
     }
 
     @PostMapping(value = "/ships")
-    public @ResponseBody Ship addShip(@Valid@RequestBody Ship ship) {
+    public @ResponseBody Ship addShip(@RequestBody @Valid Ship ship) {
          try{
              shipService.addShip(ship);
-         } catch (ConstraintViolationException e){
+         } catch (Exception e){
              throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
          }
          return ship;
     }
 
     @RequestMapping(value = "/ships/{id}", method = RequestMethod.GET)
-    public @ResponseBody Ship getShipById(@PathVariable("id")@Valid Long id) {
+    public @ResponseBody Ship getShipById(@PathVariable("id") Long id) {
         Ship ship;
+        if(!shipService.ifIdValid(id)){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Not possible to get data. ID " + id
+                    + " should be greater than 0");
+        }
         if(!shipService.ifIdExists(id)){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Not possible to get data. ID " + id
                     + " doesn't exist");
         }
         try{
             ship= shipService.getShipById(id);
-        } catch (ConstraintViolationException e){
+        } catch (Exception e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
         }
         return ship;
     }
 
     @RequestMapping(value = "/ships/{id}", method = RequestMethod.DELETE)
-    public void deleteShipById(@PathVariable("id")@Valid Long id){
+    public void deleteShipById(@PathVariable("id") Long id){
+        if(!shipService.ifIdValid(id)){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Not possible to delete data. ID " + id
+                    + " should be greater than 0");
+        }
         if(!shipService.ifIdExists(id)){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Not possible to delete data. ID " + id
                     + " doesn't exist");
         }
         try{
             shipService.deleteShip(id);
-        } catch (ConstraintViolationException e){
+
+        } catch (Exception e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
         }
     }
     @PostMapping(value = "/ships/{id}")
-    public Ship updateShipById(@PathVariable("id")@Valid Long id,@RequestBody Ship ship){
+    public Ship updateShipById(@PathVariable("id") Long id, @RequestBody Ship ship){
         Ship updatedShip;
+        if(!shipService.ifIdValid(id)){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Not possible to update data. ID " + id
+                    + " should be greater than 0");
+        }
         if(!shipService.ifIdExists(id)){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Not possible to update data. ID " + id
                     + " doesn't exist");
         }
         try{
             updatedShip=shipService.editShip(id,ship);
-        } catch (ConstraintViolationException e){
+        } catch (Exception e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
         }
         return updatedShip;

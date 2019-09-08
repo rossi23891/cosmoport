@@ -17,6 +17,7 @@ public interface ShipService {
     void deleteShip(Long id);
     Ship getShipById(Long id);
     boolean ifIdExists(Long id);
+    boolean ifIdValid(Long id);
 
     Specification<Ship> filterByName(String name);
     Specification<Ship> filterByPlanet(String planet);

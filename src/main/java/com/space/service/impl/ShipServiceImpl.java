@@ -44,8 +44,14 @@ public class ShipServiceImpl implements ShipService {
         return shipRepository.saveAndFlush(ship);
     }
 
+    @Override
     public boolean ifIdExists(Long id){
         return shipRepository.existsById(id);
+    }
+
+    @Override
+    public boolean ifIdValid(Long id) {
+        return id>0;
     }
 
     @Override

@@ -51,8 +51,7 @@ public class CreateShipTest {
         mockMvc.perform(post("/rest/ships/")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
-                .content("{}")
-        )
+                .content("{}"))
                 .andExpect(status().isBadRequest());
     }
 
