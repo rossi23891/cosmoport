@@ -18,6 +18,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -72,6 +74,9 @@ public class GetCountTest {
                         testsHelper.getShipInfosByMinSpeed(0.3,
                                 testsHelper.getAllShips()))).size();
 
+        System.out.println(actual);
+        System.out.println(expected);
+
         assertTrue("Возвращается не правильный результат при запросе GET /rest/ships/count с параметрами minRating, minCrewSize и minSpeed.", actual == expected);
     }
 
@@ -107,7 +112,6 @@ public class GetCountTest {
         int expected = testsHelper.getShipInfosByIsUsed(true,
                 testsHelper.getShipInfosByShipType(ShipType.MERCHANT,
                         testsHelper.getAllShips())).size();
-
 
         assertTrue("Возвращается не правильный результат при запросе GET rest/ships/count с параметрами shipType и isUsed.", actual == expected);
     }

@@ -58,7 +58,7 @@ public class ShipController {
     }
 
     @RequestMapping(value = "/ships/count", method = RequestMethod.GET)
-    public Count getCount(@RequestParam(value = "name", required = false) String name,
+    public Integer getCount(@RequestParam(value = "name", required = false) String name,
                             @RequestParam(value = "planet", required = false) String planet,
                             @RequestParam(value = "shipType", required = false) ShipType shipType,
                             @RequestParam(value = "after", required = false) Long after,
@@ -71,7 +71,7 @@ public class ShipController {
                             @RequestParam(value = "minRating", required = false) Double minRating,
                             @RequestParam(value = "maxRating", required = false) Double maxRating) {
 
-        Integer count= shipService.getAllShips(
+        return shipService.getAllShips(
                 Specification.where(shipService.filterByName(name)
                         .and(shipService.filterByPlanet(planet)))
                         .and(shipService.filterByShipType(shipType))
@@ -79,9 +79,7 @@ public class ShipController {
                         .and(shipService.filterByUsage(isUsed))
                         .and(shipService.filterBySpeed(minSpeed, maxSpeed))
                         .and(shipService.filterByCrewSize(minCrewSize, maxCrewSize))
-                        .and(shipService.filterByRating(minRating, maxRating)))
-                .size();
-        return new Count(count);
+                        .and(shipService.filterByRating(minRating, maxRating)),Pageable.unpaged()).getNumberOfElements();
     }
 
     @PostMapping(value = "/ships")
@@ -130,6 +128,7 @@ public class ShipController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
         }
     }
+
     @PostMapping(value = "/ships/{id}")
     public Ship updateShipById(@PathVariable("id") Long id, @RequestBody Ship ship){
         Ship updatedShip;

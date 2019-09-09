@@ -56,7 +56,7 @@ public class ShipServiceImpl implements ShipService {
 
     @Override
     public Ship editShip(Long id,Ship ship) {
-        Ship tobeUpdated = shipRepository.getOne(id);
+        Ship tobeUpdated = shipRepository.findById(id).get();
         if(ship.getName()!=null){
             tobeUpdated.setName(ship.getName());
         }
@@ -92,28 +92,29 @@ public class ShipServiceImpl implements ShipService {
 
     @Override
     public Ship getShipById(Long id) {
-        return shipRepository.getOne(id);
+
+        return shipRepository.findById(id).get();
     }
 
     @Override
     public Specification<Ship> filterByName(String name) {
 
         return (Specification<Ship>) (root, query, criteriaBuilder) ->
-                name ==null?null : criteriaBuilder.like(root.get("name"),"%" + name + "%");
+                name == null ? null : criteriaBuilder.like(root.get("name"),"%" + name + "%");
     }
 
     @Override
     public Specification<Ship> filterByPlanet(String planet) {
 
         return (Specification<Ship>) (root, query, criteriaBuilder) ->
-                planet ==null?null : criteriaBuilder.like(root.get("planet"),"%" + planet + "%");
+                planet == null ? null : criteriaBuilder.like(root.get("planet"),"%" + planet + "%");
     }
 
     @Override
     public Specification<Ship> filterByShipType(ShipType shipType) {
 
         return (Specification<Ship>) (root, query, criteriaBuilder) ->
-                shipType ==null?null : criteriaBuilder.like(root.get("shiptype"),"%" + shipType + "%");
+                shipType == null ? null : criteriaBuilder.equal(root.get("shipType"), shipType);
     }
 
     @Override

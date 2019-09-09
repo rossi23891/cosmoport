@@ -4,6 +4,7 @@ import com.space.validator.ProdDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
