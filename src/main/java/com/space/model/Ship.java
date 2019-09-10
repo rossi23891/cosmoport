@@ -41,7 +41,7 @@ public class Ship {
 
     @NotNull
     @Min(value = 1,message = "Crew size should be more than 0")
-    @Max(value = 9999,message = "Crew size should be more than 10000")
+    @Max(value = 9999,message = "Crew size should not be more than 10000")
     private Integer crewSize;
 
     private Double rating;
